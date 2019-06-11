@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr 14 11:24:17 2019
-
+将轨迹数据填充到轨迹网格中，但是每个用户的网格规模是（512*401*4），将一天划分为4个时间段，所以每个人的channel为4
 @author: Administrator
 """
 
