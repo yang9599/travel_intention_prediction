@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Mar 23 18:44:48 2019
-
+把轨迹数据填充到轨迹网格中，然后利用cnn深度学习的方法预测
 @author: dell
 """
 
