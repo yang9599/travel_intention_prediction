@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 
+#读取轨迹数据
 i = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
 user = pd.read_csv(r"G:\track data and travel prediction\dataset\DataTech_Travel_Train_User",
                    sep='|', names=['USER_ID', 'FLAG', 'TRAVEL_TYPE'])
@@ -17,6 +18,8 @@ for number in tqdm(i):
     dataset = dataset[dataset['USER_ID'].isin(userid)]
     dataset_sample = dataset_sample.append(dataset, ignore_index=True)
 dataset = dataset_sample.copy()
+#预处理的操作，即把经纬度数据保留小数点后两位
+#然后同一个小时内，如果有多条在地图网格的数据，只保留一条
 dataset['longitude'] = (dataset['LONGITUDE'] * 100) // 1 / 100
 dataset['latitude'] = (dataset['LATITUDE'] * 100) // 1 / 100
 dataset['HOUR'] = dataset['START_TIME'] // 100 % 100
@@ -25,7 +28,7 @@ dataset.reset_index(drop=True, inplace=True)
 dataset = dataset.drop_duplicates(['USER_ID', 'longitude', 'latitude', 'P_MONTH', 'HOUR'])
 dataset = dataset.loc[:,('USER_ID', 'HOUR','longitude', 'latitude', 'P_MONTH')]
 
-#筛选出每天都有轨迹记录的用户
+#筛选出每天都有轨迹记录的用户，即排除有缺失记录的用户
 user_c = []
 for userid in (dataset['USER_ID'].unique()):
     dt_user = dataset[dataset['USER_ID']==userid]
@@ -35,7 +38,7 @@ for userid in (dataset['USER_ID'].unique()):
         continue
 dataset = dataset[dataset['USER_ID'].isin(user_c)]
       
-#计算日均轨迹点数
+#计算日均轨迹点数（日均记录数量）
 num_of_points = dataset.copy()
 num_of_points = num_of_points.groupby(['USER_ID', 'P_MONTH']).count()
 num_of_points.reset_index(inplace=True)
@@ -184,10 +187,10 @@ def shift_down(m):
     m.fillna(0, inplace=True)
     m = m.as_matrix()
     return(m)
-    
+
+#利用jaccard计算用户每天轨迹网格的相似度
 similarity = pd.DataFrame(columns=['USER_ID', 'shift_similarity', 'maxpo_similarity'])
 i = 0
-
 for userid in tqdm(rcsm['USER_ID'].unique()):
     dataset_userid = rcsm[rcsm['USER_ID'] == userid]
     dataset_userid['P_MONTH1'] = dataset_userid['P_MONTH'].astype(np.str)
