@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Apr  3 00:44:37 2019
-
+采用了convlstm的方法尝试，但是结果不尽人意。一方面是convlstm方法特别耗费内存，因为我的网格矩阵比较大，所以内存（电脑的配置是32G内存）会经常报错。
+另一方面可能由于，每个用户每天的数据网格比较稀疏，加上时间维度的效果，并不是特别好。该代码内容仅限参考
 @author: dell
 """
 
@@ -19,7 +20,7 @@ import keras.backend.tensorflow_backend as KTF
 import tensorflow as tf
 import os
 
-
+#设置tensorflow的gpu加速
 def get_session(gpu_fraction):
     """
     This function is to allocate GPU memory a specific fraction
@@ -48,6 +49,7 @@ dataset = dataset.drop_duplicates(['USER_ID', 'longitude', 'latitude', 'P_MONTH'
 dataset = pd.merge(dataset, user, on='USER_ID')
 dataset = dataset.loc[:,('USER_ID', 'longitude', 'latitude', 'P_MONTH', 'TYPE')]
 
+#删除节假日的轨迹数据，因为节假日的轨迹数据相对于工作日，比较难有规律可循
 holidays = ['20180602', '20180603', '20180609', '20180610', '20180616', '20180617', '20180618',
             '20180623', '20180624', '20180630']
 dataset['P_MONTH'] = dataset['P_MONTH'].astype(np.str)
