@@ -29,7 +29,7 @@ dataset = dataset.loc[:,('USER_ID', 'HOUR','longitude', 'latitude', 'P_MONTH')]
 user_c = []
 for userid in (dataset['USER_ID'].unique()):
     dt_user = dataset[dataset['USER_ID']==userid]
-    if len(dt_user['P_MONTH'].unique()) >= 25:
+    if len(dt_user['P_MONTH'].unique()) == 30:
         user_c.append(userid)
     else:
         continue
