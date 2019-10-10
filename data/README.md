@@ -1,5 +1,7 @@
 ### 数据下载
 通过百度云链接下载：https://pan.baidu.com/s/1_BQWTSLI0mMpTE87pHIyZA
+注明：数据来源于全球数据资源开发者大赛暨Data Tech 2018大数据建模与创新应用大赛。（http://wdd.datarda.com.cn/）
+也可以去大赛官网下载数据
 
 ### 数据表介绍
 轨迹数据表
